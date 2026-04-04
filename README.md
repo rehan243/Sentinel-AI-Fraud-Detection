@@ -88,46 +88,6 @@ Built at **Reallytics.ai** for Tower Loan and other financial services clients.
 | **MLOps** | CloudWatch, QuickSight, automated retraining |
 | **API** | FastAPI, REST endpoints |
 
-## Project Structure
-
-`
-sentinel-ai-fraud-detection/
-├── data/
-│   ├── ingestion/
-│   │   ├── oll_connector.py
-│   │   ├── tlos_connector.py
-│   │   └── pii_encryption.py
-│   └── feature_engineering/
-│       ├── behavioral_features.py
-│       ├── contact_features.py
-│       ├── identity_features.py
-│       └── timing_features.py
-├── models/
-│   ├── xgboost_detective.py
-│   ├── isolation_forest_watchdog.py
-│   ├── ensemble_task_force.py
-│   └── persona_classifier.py
-├── explainability/
-│   ├── shap_analyzer.py
-│   ├── bedrock_report_generator.py
-│   └── pdf_builder.py
-├── api/
-│   ├── main.py
-│   ├── scoring_endpoint.py
-│   └── report_endpoint.py
-├── mlops/
-│   ├── drift_detector.py
-│   ├── retraining_pipeline.py
-│   └── model_registry.py
-├── infrastructure/
-│   ├── Dockerfile
-│   ├── sagemaker_deploy.py
-│   └── lambda_handler.py
-├── tests/
-├── requirements.txt
-└── README.md
-`
-
 ## Results
 
 | Metric | Value |
@@ -148,26 +108,10 @@ sentinel-ai-fraud-detection/
 - Online Lenders
 - Fintech Companies
 
-## Quick Start
+---
 
-`ash
-git clone https://github.com/rehan243/Sentinel-AI-Fraud-Detection.git
-cd Sentinel-AI-Fraud-Detection
+> **Source Code**: The production source code for this project is maintained in a private repository due to proprietary and client confidentiality requirements. This repository documents the architecture, design decisions, and technical approach. For code-level discussions or collaboration inquiries, feel free to reach out.
 
-pip install -r requirements.txt
-
-# Feature engineering
-python data/feature_engineering/behavioral_features.py --input ./data/raw
-
-# Train ensemble
-python models/ensemble_task_force.py --config configs/training.yaml
-
-# Start scoring API
-uvicorn api.main:app --host 0.0.0.0 --port 8000
-
-# Generate explainable report
-python explainability/bedrock_report_generator.py --application-id LA-2024-1248
-`
 
 ## Author
 
@@ -178,4 +122,3 @@ python explainability/bedrock_report_generator.py --application-id LA-2024-1248
 - [Live Demo](https://fraud-detection.reallytics.ai)
 
 ---
-
