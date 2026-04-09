@@ -1,0 +1,18 @@
+model:
+  type: xgboost
+  params:
+    max_depth: 8
+    learning_rate: 0.05
+    n_estimators: 500
+    subsample: 0.8
+    colsample_bytree: 0.8
+    scale_pos_weight: auto
+    eval_metric: aucpr
+  training:
+    validation_split: 0.2
+    early_stopping_rounds: 50
+    stratified: true
+  monitoring:
+    drift_check_interval: daily
+    psi_threshold: 0.2
+    performance_alert_threshold: 0.05
