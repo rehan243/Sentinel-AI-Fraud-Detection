@@ -1,0 +1,29 @@
+groups:
+  - name: sentinel_fraud
+    rules:
+      - alert: FraudModelHighLatency
+        expr: histogram_quantile(0.95, sum(rate(fraud_predict_latency_seconds_bucket[5m])) by (le, model_version)) > 0.25
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: p95 scoring latency high
+          description: model {{ $labels.model_version }} p95 > 250ms for 10m
+
+      - alert: FraudScoringErrorBurst
+        expr: sum(rate(fraud_predict_errors_total[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: scoring errors spiking
+          description: check model bundle paths / feature schema drift
+
+      - alert: FraudModelDriftProxy
+        expr: abs(avg_over_time(fraud_predictions_avg_score[1h] offset 24h) - avg_over_time(fraud_predictions_avg_score[1h])) > 0.15
+        for: 2h
+        labels:
+          severity: warning
+        annotations:
+          summary: score distribution shifted vs yesterday
+          description: wire a real PSI metric — this is a stand-in
