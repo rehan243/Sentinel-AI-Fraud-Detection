@@ -1,27 +1,26 @@
 create or replace view fraud_analysis as
 select 
-    t.user_id,
     t.transaction_id,
-    t.transaction_amount,
-    t.transaction_date,
-    t.fraud_score,
+    t.user_id,
+    t.amount,
+    t.timestamp,
+    t.status,
+    u.account_age,
+    u.average_transaction_value,
     case 
-        when t.fraud_score > 0.8 then 'high risk'
-        when t.fraud_score between 0.5 and 0.8 then 'medium risk'
-        else 'low risk'
-    end as risk_category,
-    count(f.id) as fraud_report_count
-from 
-    transactions t
-left join 
-    fraud_reports f on t.transaction_id = f.transaction_id
-group by 
-    t.user_id, 
-    t.transaction_id, 
-    t.transaction_amount, 
-    t.transaction_date, 
-    t.fraud_score
-order by 
-    t.transaction_date desc;
+        when t.amount > u.average_transaction_value * 2 then 'high_risk'
+        when t.amount between u.average_transaction_value and u.average_transaction_value * 2 then 'medium_risk'
+        else 'low_risk'
+    end as risk_level,
+    case 
+        when t.status = 'failed' then 1
+        when t.status = 'successful' then 0
+        else null
+    end as failed_transaction
+from transactions t
+join users u on t.user_id = u.user_id
+where t.timestamp >= current_date - interval '30 days'
+order by t.timestamp desc;
 
--- TODO: add indexes to improve performance on large datasets
+-- TODO: might want to add more filters for specific transaction types later
+-- consider indexing transaction_id for performance if this gets large
