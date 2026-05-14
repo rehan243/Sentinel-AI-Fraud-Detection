@@ -1,4 +1,4 @@
-"""Fraud scoring stack — features, API, alerts. Not legal advice."""
+"""fraud scoring stack — features, API, alerts. not legal advice."""
 
 from src.feature_engine import FeatureEngine, TransactionEvent
 from src.model_server import create_app
@@ -12,3 +12,23 @@ __all__ = [
     "AlertDecision",
     "RoutingOutcome",
 ]
+
+def initialize_feature_engine() -> FeatureEngine:
+    """initialize feature engine with error handling"""
+    try:
+        engine = FeatureEngine()
+    except Exception as e:
+        print(f"error initializing feature engine: {e}")
+        raise
+    return engine
+
+def setup_alert_pipeline() -> AlertPipeline:
+    """setup alert pipeline with error handling"""
+    try:
+        pipeline = AlertPipeline()
+    except Exception as e:
+        print(f"error setting up alert pipeline: {e}")
+        raise
+    return pipeline
+
+# TODO: consider adding more detailed logging for debugging
