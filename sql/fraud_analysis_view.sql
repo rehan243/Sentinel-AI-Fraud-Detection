@@ -1,26 +1,25 @@
-create or replace view fraud_analysis as
+create or replace view fraud_analysis_view as
 select 
-    t.transaction_id,
-    t.user_id,
-    t.amount,
-    t.timestamp,
-    t.status,
-    u.account_age,
-    u.average_transaction_value,
+    f.transaction_id,
+    f.user_id,
+    f.transaction_amount,
+    f.transaction_date,
     case 
-        when t.amount > u.average_transaction_value * 2 then 'high_risk'
-        when t.amount between u.average_transaction_value and u.average_transaction_value * 2 then 'medium_risk'
-        else 'low_risk'
-    end as risk_level,
-    case 
-        when t.status = 'failed' then 1
-        when t.status = 'successful' then 0
-        else null
-    end as failed_transaction
-from transactions t
-join users u on t.user_id = u.user_id
-where t.timestamp >= current_date - interval '30 days'
-order by t.timestamp desc;
+        when f.transaction_amount > 1000 then 'high_value'
+        when f.transaction_amount between 500 and 1000 then 'medium_value'
+        else 'low_value'
+    end as value_category,
+    r.risk_score,
+    r.alert_status
+from 
+    transactions f
+left join 
+    risk_scores r on f.transaction_id = r.transaction_id
+where 
+    f.transaction_date >= current_date - interval '30 days' -- look at last 30 days
+    and r.alert_status = 'active' -- only consider active alerts
+order by 
+    f.transaction_date desc; -- sort by date, latest first
 
--- TODO: might want to add more filters for specific transaction types later
--- consider indexing transaction_id for performance if this gets large
+-- TODO: add more filters if needed based on user feedback
+-- maybe consider adding a group by for aggregation later on
