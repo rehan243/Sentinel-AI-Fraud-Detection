@@ -1,4 +1,4 @@
-"""FastAPI + two-model ensemble — because one model is a single point of failure."""
+"""fastapi + two-model ensemble - because one model is a single point of failure"""
 
 from __future__ import annotations
 
@@ -60,8 +60,8 @@ class ModelBundle:
         if hasattr(self.scaler, "mean_") and getattr(self.scaler, "mean_", None) is not None:
             try:
                 vec = self.scaler.transform(vec)
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.warning("scaling failed: %s", exc)
         dmat = xgb.DMatrix(vec, feature_names=self._feature_order)
         xgb_p = float(self.xgb.predict(dmat)[0])
         nn_p = 1.0 / (1.0 + np.exp(-float(vec.mean())))
@@ -100,7 +100,7 @@ def create_app(model_dir: Path) -> FastAPI:
         body: PredictRequest,
         request: Request,
         x_experiment_variant: Optional[str] = Header(default=None),
-    ):
+    ) -> PredictResponse:  # added return type hint
         try:
             model, variant = _select_variant(x_experiment_variant)
             t0 = time.perf_counter()
