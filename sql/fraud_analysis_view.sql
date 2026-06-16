@@ -4,22 +4,22 @@ select
     f.user_id,
     f.transaction_amount,
     f.transaction_date,
+    f.risk_score,
     case 
-        when f.transaction_amount > 1000 then 'high_value'
-        when f.transaction_amount between 500 and 1000 then 'medium_value'
-        else 'low_value'
-    end as value_category,
-    r.risk_score,
-    r.alert_status
+        when f.risk_score > 80 then 'high'
+        when f.risk_score between 50 and 80 then 'medium'
+        else 'low'
+    end as risk_category,
+    u.user_name,
+    u.account_status
 from 
-    transactions f
-left join 
-    risk_scores r on f.transaction_id = r.transaction_id
+    fraud_transactions f
+join 
+    users u on f.user_id = u.id
 where 
-    f.transaction_date >= current_date - interval '30 days' -- look at last 30 days
-    and r.alert_status = 'active' -- only consider active alerts
+    f.transaction_date >= current_date - interval '30 days'
+    and u.account_status = 'active'
 order by 
-    f.transaction_date desc; -- sort by date, latest first
+    f.transaction_date desc;
 
--- TODO: add more filters if needed based on user feedback
--- maybe consider adding a group by for aggregation later on
+-- TODO: maybe add more filters or group by user_id for summary stats
