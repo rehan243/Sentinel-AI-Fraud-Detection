@@ -1,25 +1,29 @@
 create or replace view fraud_analysis_view as
 select 
     f.transaction_id,
+    f.amount,
+    f.timestamp,
     f.user_id,
-    f.transaction_amount,
-    f.transaction_date,
-    f.risk_score,
+    u.account_age,
+    f.location,
     case 
-        when f.risk_score > 80 then 'high'
-        when f.risk_score between 50 and 80 then 'medium'
-        else 'low'
-    end as risk_category,
-    u.user_name,
-    u.account_status
+        when f.amount > 1000 then 'high risk'
+        when f.amount between 500 and 1000 then 'medium risk'
+        else 'low risk'
+    end as risk_level,
+    sum(case when t.transaction_type = 'refund' then 1 else 0 end) as refund_count,
+    count(t.transaction_id) as total_transactions,
+    count(distinct f.user_id) over (partition by f.location) as user_count_in_location
 from 
-    fraud_transactions f
+    transactions f
 join 
-    users u on f.user_id = u.id
+    users u on f.user_id = u.user_id
+left join 
+    transactions t on f.user_id = t.user_id and f.timestamp > t.timestamp
 where 
-    f.transaction_date >= current_date - interval '30 days'
-    and u.account_status = 'active'
+    f.timestamp >= current_date - interval '30 days' 
+group by 
+    f.transaction_id, f.amount, f.timestamp, f.user_id, u.account_age, f.location
 order by 
-    f.transaction_date desc;
-
--- TODO: maybe add more filters or group by user_id for summary stats
+    f.timestamp desc
+-- TODO: consider adding more filters for better granularity
