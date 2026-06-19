@@ -1,37 +1,28 @@
 import pytest
-from src.fraud_detection import FraudDetector
+from fraud_detection import FraudDetector  # assuming this is our main class
 
-def test_basic_fraud_detection():
+def test_fraud_detection_high_score():
+    # testing high risk score
     detector = FraudDetector()
+    score = detector.calculate_score(transaction_amount=10000, user_history='high-risk')
+    assert score > 75, f"expected score to be greater than 75 but got {score}"
 
-    # test simple case where transaction amount is high
-    transaction = {"amount": 1500, "location": "international", "user_id": 1}
-    assert detector.is_fraudulent(transaction) == True
-
-    # test case where transaction amount is low
-    transaction = {"amount": 50, "location": "local", "user_id": 2}
-    assert detector.is_fraudulent(transaction) == False
-
-def test_location_based_fraud_detection():
+def test_fraud_detection_low_score():
+    # testing low risk score
     detector = FraudDetector()
+    score = detector.calculate_score(transaction_amount=100, user_history='low-risk')
+    assert score < 25, f"expected score to be less than 25 but got {score}"
 
-    # high amount from a suspicious location
-    transaction = {"amount": 2000, "location": "offshore", "user_id": 3}
-    assert detector.is_fraudulent(transaction) == True
-
-    # normal amount from a safe location
-    transaction = {"amount": 100, "location": "local", "user_id": 4}
-    assert detector.is_fraudulent(transaction) == False
-
-def test_user_history_fraud_detection():
+def test_fraud_detection_edge_case():
+    # testing an edge case
     detector = FraudDetector()
+    score = detector.calculate_score(transaction_amount=500, user_history='unknown')
+    assert score == 50, f"expected score to be exactly 50 but got {score}"
 
-    # user with suspicious history
-    transaction = {"amount": 500, "location": "local", "user_id": 5, "user_history": "suspicious"}
-    assert detector.is_fraudulent(transaction) == True
+def test_fraud_detection_invalid_input():
+    # testing invalid input handling
+    detector = FraudDetector()
+    with pytest.raises(ValueError):
+        detector.calculate_score(transaction_amount=-100, user_history='low-risk')
 
-    # user with clean history
-    transaction = {"amount": 300, "location": "local", "user_id": 6, "user_history": "clean"}
-    assert detector.is_fraudulent(transaction) == False
-
-# TODO: add more tests for edge cases and different user profiles
+# TODO: add more tests for different user histories and transaction amounts
