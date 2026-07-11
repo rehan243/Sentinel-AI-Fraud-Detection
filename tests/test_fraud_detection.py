@@ -1,28 +1,45 @@
 import pytest
-from fraud_detection import FraudDetector  # assuming this is our main class
+from fraud_detection import FraudDetector  # assuming this is where the logic is
 
-def test_fraud_detection_high_score():
-    # testing high risk score
+def test_fraud_detection_high_risk():
+    # tests a high-risk case
     detector = FraudDetector()
-    score = detector.calculate_score(transaction_amount=10000, user_history='high-risk')
-    assert score > 75, f"expected score to be greater than 75 but got {score}"
+    transaction = {
+        'amount': 10000,
+        'location': 'offshore',
+        'transaction_type': 'wire_transfer'
+    }
+    assert detector.is_fraudulent(transaction) is True
 
-def test_fraud_detection_low_score():
-    # testing low risk score
+def test_fraud_detection_low_risk():
+    # tests a low-risk case
     detector = FraudDetector()
-    score = detector.calculate_score(transaction_amount=100, user_history='low-risk')
-    assert score < 25, f"expected score to be less than 25 but got {score}"
+    transaction = {
+        'amount': 100,
+        'location': 'local',
+        'transaction_type': 'deposit'
+    }
+    assert detector.is_fraudulent(transaction) is False
 
 def test_fraud_detection_edge_case():
-    # testing an edge case
+    # tests an edge case with amount exactly on the threshold
     detector = FraudDetector()
-    score = detector.calculate_score(transaction_amount=500, user_history='unknown')
-    assert score == 50, f"expected score to be exactly 50 but got {score}"
+    transaction = {
+        'amount': 5000,
+        'location': 'local',
+        'transaction_type': 'withdrawal'
+    }
+    assert detector.is_fraudulent(transaction) is False  # assuming threshold is above this
 
-def test_fraud_detection_invalid_input():
-    # testing invalid input handling
+def test_fraud_detection_invalid_transaction():
+    # tests invalid transaction input
     detector = FraudDetector()
+    transaction = {
+        'amount': -100,
+        'location': 'unknown',
+        'transaction_type': 'unknown'
+    }
     with pytest.raises(ValueError):
-        detector.calculate_score(transaction_amount=-100, user_history='low-risk')
+        detector.is_fraudulent(transaction)
 
-# TODO: add more tests for different user histories and transaction amounts
+# TODO: add more tests for different scenarios
