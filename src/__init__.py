@@ -33,3 +33,4 @@ def setup_alert_pipeline() -> AlertPipeline:
 
 # TODO: consider adding more detailed logging for debugging
 # also, maybe include specific exception types to catch
+# might want to add a test for error scenarios in the future
