@@ -6,7 +6,7 @@ import math
 import random
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Tuple, Optional
 
 
 @dataclass
@@ -18,15 +18,25 @@ class Weights:
     def score_row(self, row: Dict[str, str]) -> float:
         z = self.b
         for k, wt in self.w.items():
-            v = float(row.get(k, "0") or 0.0)
-            z += wt * v
+            try:
+                v = float(row.get(k, "0") or 0.0)
+                z += wt * v
+            except ValueError:
+                print(f"warning: invalid value for {k} in row {row}, defaulting to 0")
         return 1.0 / (1.0 + math.exp(-z))
 
 
 def read_rows(path: Path) -> List[Dict[str, str]]:
-    with path.open(encoding="utf-8") as f:
-        r = csv.DictReader(f)
-        return list(r)
+    try:
+        with path.open(encoding="utf-8") as f:
+            r = csv.DictReader(f)
+            return list(r)
+    except FileNotFoundError:
+        print(f"error: file {path} not found")
+        return []
+    except Exception as e:
+        print(f"error: an unexpected error occurred while reading {path}: {e}")
+        return []
 
 
 def summarize(scores: Iterable[float]) -> Tuple[float, float]:
