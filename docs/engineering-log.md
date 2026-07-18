@@ -14,3 +14,7 @@ I've added a new script for automated feature engineering using LightAutoML, whi
 ### 2026-07-16
 
 Added drift monitoring on top 10 features using population stability index (PSI) with a 0.1 threshold to flag shifts. Noticed PSI is sensitive to binning strategy, using quantile bins stabilized alerts better than equal-width bins, reducing false positives during normal variance. Need to balance alert sensitivity against operational noise.
+
+### 2026-07-18
+
+Implemented new feature engineering techniques that leverage transaction velocity and user behavior patterns for fraud detection models. Noticed that while adding derived features improved model accuracy, it also increased the risk of overfitting, especially with smaller datasets. I had to balance complexity and interpretability, deciding to limit the number of features to maintain a stable performance on unseen data.
