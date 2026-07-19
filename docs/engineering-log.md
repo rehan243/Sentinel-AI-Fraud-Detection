@@ -18,3 +18,7 @@ Added drift monitoring on top 10 features using population stability index (PSI)
 ### 2026-07-18
 
 Implemented new feature engineering techniques that leverage transaction velocity and user behavior patterns for fraud detection models. Noticed that while adding derived features improved model accuracy, it also increased the risk of overfitting, especially with smaller datasets. I had to balance complexity and interpretability, deciding to limit the number of features to maintain a stable performance on unseen data.
+
+### 2026-07-19
+
+**Observation:** After implementing drift monitoring for our fraud models, I noticed that the false positive rate (FPR) increased by 10% during the initial monitoring period. This was due to the model's sensitivity to small changes in the data distribution, highlighting the importance of regular retraining and careful feature selection to maintain model performance.
