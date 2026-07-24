@@ -19,7 +19,7 @@ def initialize_feature_engine() -> FeatureEngine:
         engine = FeatureEngine()
     except Exception as e:
         print(f"error initializing feature engine: {e}")
-        raise
+        raise RuntimeError("failed to initialize feature engine") from e
     return engine
 
 def setup_alert_pipeline() -> AlertPipeline:
@@ -28,7 +28,7 @@ def setup_alert_pipeline() -> AlertPipeline:
         pipeline = AlertPipeline()
     except Exception as e:
         print(f"error setting up alert pipeline: {e}")
-        raise
+        raise RuntimeError("failed to set up alert pipeline") from e
     return pipeline
 
 # TODO: consider adding more detailed logging for debugging
