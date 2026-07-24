@@ -22,3 +22,7 @@ Implemented new feature engineering techniques that leverage transaction velocit
 ### 2026-07-19
 
 **Observation:** After implementing drift monitoring for our fraud models, I noticed that the false positive rate (FPR) increased by 10% during the initial monitoring period. This was due to the model's sensitivity to small changes in the data distribution, highlighting the importance of regular retraining and careful feature selection to maintain model performance.
+
+### 2026-07-24
+
+Added rolling window feature calculations to capture temporal spending patterns, but noticed increasing feature staleness beyond a 14-day window led to degraded model performance. Drift monitoring with population stability index (PSI) highlighted that features aggregated over longer periods mask sudden shifts in fraud behavior, so I settled on a 7-day window for a better balance between stability and responsiveness.
