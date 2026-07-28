@@ -26,3 +26,7 @@ Implemented new feature engineering techniques that leverage transaction velocit
 ### 2026-07-24
 
 Added rolling window feature calculations to capture temporal spending patterns, but noticed increasing feature staleness beyond a 14-day window led to degraded model performance. Drift monitoring with population stability index (PSI) highlighted that features aggregated over longer periods mask sudden shifts in fraud behavior, so I settled on a 7-day window for a better balance between stability and responsiveness.
+
+### 2026-07-28
+
+Added feature importance tracking over time to flag drift in fraud models; observed that relying solely on PSI for distribution shift missed subtle feature interaction changes, so combined PSI with SHAP value drift metrics. Noted that aggressive feature pruning based on drift signals can degrade performance abruptly, need a gradual rollback strategy.
