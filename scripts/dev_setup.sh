@@ -1,34 +1,33 @@
 #!/bin/bash
 
-# this script sets up the development environment
-# it runs linting and tests for the project
+# check if docker is running
+if ! docker info > /dev/null 2>&1; then
+    echo "docker is not running. please start docker and try again"
+    exit 1
+fi
 
-set -e  # exit on error
+# run linter
+echo "running linter..."
+flake8 src/ --max-line-length=88
+if [ $? -ne 0 ]; then
+    echo "linting failed, fix the issues above"
+    exit 1
+fi
 
-# function to run linters
-run_linters() {
-    echo "running linters..."
-    flake8 src/  # check for python style issues
-    black --check src/  # check for proper formatting
-}
+# run tests
+echo "running tests..."
+pytest tests/
+if [ $? -ne 0 ]; then
+    echo "tests failed, fix the issues above"
+    exit 1
+fi
 
-# function to run tests
-run_tests() {
-    echo "running tests..."
-    pytest tests/  # execute tests in the tests folder
-}
+# build docker image
+echo "building docker image..."
+docker build -t fraud-detection .
 
-# main function to drive the script
-main() {
-    echo "setting up development environment"
-    
-    run_linters  # check for code quality
-    run_tests  # make sure tests pass
+# run docker container
+echo "starting docker container..."
+docker run --rm -p 5000:5000 fraud-detection
 
-    echo "dev setup complete"
-}
-
-# run the main function
-main "$@"
-
-# TODO: consider adding options for docker build and local run in the future
+echo "dev setup complete, everything looks good"
