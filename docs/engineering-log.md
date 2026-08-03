@@ -30,3 +30,7 @@ Added rolling window feature calculations to capture temporal spending patterns,
 ### 2026-07-28
 
 Added feature importance tracking over time to flag drift in fraud models; observed that relying solely on PSI for distribution shift missed subtle feature interaction changes, so combined PSI with SHAP value drift metrics. Noted that aggressive feature pruning based on drift signals can degrade performance abruptly, need a gradual rollback strategy.
+
+### 2026-08-03
+
+Reviewed feature engineering and drift monitoring for fraud models today. Reinforced that measuring the change end-to-end beats reasoning about it in isolation — the numbers rarely match the intuition.
