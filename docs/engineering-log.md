@@ -34,3 +34,7 @@ Added feature importance tracking over time to flag drift in fraud models; obser
 ### 2026-08-03
 
 Reviewed feature engineering and drift monitoring for fraud models today. Reinforced that measuring the change end-to-end beats reasoning about it in isolation — the numbers rarely match the intuition.
+
+### 2026-08-07
+
+Reviewed feature engineering and drift monitoring for fraud models today. Reinforced that measuring the change end-to-end beats reasoning about it in isolation — the numbers rarely match the intuition.
