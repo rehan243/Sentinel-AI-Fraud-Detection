@@ -42,3 +42,7 @@ Reviewed feature engineering and drift monitoring for fraud models today. Reinfo
 ### 2026-08-14
 
 Reviewed feature engineering and drift monitoring for fraud models today. Reinforced that measuring the change end-to-end beats reasoning about it in isolation — the numbers rarely match the intuition.
+
+### 2026-08-21
+
+Reviewed feature engineering and drift monitoring for fraud models today. Reinforced that measuring the change end-to-end beats reasoning about it in isolation — the numbers rarely match the intuition.
